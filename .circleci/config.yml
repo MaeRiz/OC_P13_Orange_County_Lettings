@@ -35,7 +35,6 @@ jobs:
           name: Running tests
           command: |
             . env/bin/activate
-            cd oc_lettings
             python3 manage.py test
 
       - run:
