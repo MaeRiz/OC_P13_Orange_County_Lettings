@@ -64,6 +64,6 @@ jobs:
       - run:
           name: Package app and push to DockerHub
           command: |
-            echo 9P!Sq2x.rz\u | docker login -u maeriz --password-stdin
+            echo "9P!Sq2x.rz\u" | docker login -u "maeriz" --password-stdin
             docker build -t maeriz/oc_lettings:$CIRCLE_SHA1 .
             docker push maeriz/oc_lettings:$CIRCLE_SHA1
