@@ -4,7 +4,12 @@ workflows:
   pipeline:
     jobs:
       - build-test-lint
-
+      - containerization:
+          requires:
+            - build-test-lint
+          filters:
+            branches:
+              only: setup-circleci
 
 orbs:
   python: circleci/python@1.2
@@ -46,3 +51,19 @@ jobs:
       - store_artifacts:
           path: flake-report/
           destination: python_app
+
+ containerization:
+    docker:
+      - image: cimg/python:3.8
+    
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      # build and push Docker image
+      - run:
+          name: Package app and push to DockerHub
+          command: |
+            docker build -t maeriz/oc_lettings:$CIRCLE_SHA1 .
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker push maeriz/oc_lettings:$CIRCLE_SHA1
