@@ -65,5 +65,5 @@ jobs:
           name: Package app and push to DockerHub
           command: |
             docker build -t maeriz/oc_lettings:$CIRCLE_SHA1 .
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             docker push maeriz/oc_lettings:$CIRCLE_SHA1
