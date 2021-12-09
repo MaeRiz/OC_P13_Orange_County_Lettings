@@ -52,7 +52,7 @@ jobs:
           path: flake-report/
           destination: python_app
 
- containerization:
+  containerization:
     docker:
       - image: cimg/python:3.8
     
