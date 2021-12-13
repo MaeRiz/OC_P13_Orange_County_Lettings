@@ -10,6 +10,13 @@ workflows:
           filters:
             branches:
               only: setup-circleci
+      - deploy-dev:
+          requires:
+            - build-test-lint
+            - containerization
+          filters:
+            branches:
+              only: setup-circleci
 
 orbs:
   python: circleci/python@1.2
@@ -65,5 +72,17 @@ jobs:
           name: Package app and push to DockerHub
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker build -t maeriz/oc_lettings:$CIRCLE_SHA1 .
-            docker push maeriz/oc_lettings:$CIRCLE_SHA1
+            docker build -t $DOCKER_USER/oc_lettings:$CIRCLE_SHA1 .
+            docker push $DOCKER_USER/oc_lettings:$CIRCLE_SHA1
+
+  deploy-dev:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build and push Docker image to Heroku
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:login
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:push -a oc-lettings-21 web
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:release -a oc-lettings-21 web
