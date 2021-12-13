@@ -54,8 +54,7 @@ jobs:
           name: Running linting
           command: |
             . env/bin/activate
-            cd oc_lettings/
-            flake8 --exclude **/migrations/*,env \ --max-line-length 99 --format=html --htmldir=flake-report
+            flake8 --format=html --htmldir=flake-report
 
       - store_artifacts:
           path: flake-report/
