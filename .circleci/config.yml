@@ -58,7 +58,7 @@ jobs:
 
       - store_artifacts:
           path: flake-report/
-          destination: python_app
+          destination: flake-report
 
   containerization:
     docker:
