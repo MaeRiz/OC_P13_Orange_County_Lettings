@@ -1,0 +1,85 @@
+version: 2.1
+
+workflows:
+  pipeline:
+    jobs:
+      - build-test-lint
+      - containerization:
+          requires:
+            - build-test-lint
+          filters:
+            branches:
+              only: master
+      - deploy-dev:
+          requires:
+            - build-test-lint
+            - containerization
+          filters:
+            branches:
+              only: master
+
+orbs:
+  python: circleci/python@1.2
+
+jobs:
+  build-test-lint: 
+ 
+    docker:
+      - image: cimg/python:3.8
+    
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv env
+            . env/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "env"
+
+      - run:
+          name: Running tests
+          command: |
+            . env/bin/activate
+            cd oc_lettings/
+            python3 manage.py test
+      - run:
+          name: Running linting
+          command: |
+            . env/bin/activate
+            flake8 --format=html --htmldir=flake-report
+      - store_artifacts:
+          path: flake-report/
+          destination: flake-report
+
+  containerization:
+    docker:
+      - image: cimg/python:3.8
+    
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      # build and push Docker image
+      - run:
+          name: Package app and push to DockerHub
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker build -t $DOCKER_USER/oc_lettings:$CIRCLE_SHA1 .
+            docker push $DOCKER_USER/oc_lettings:$CIRCLE_SHA1
+  deploy-dev:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build and push Docker image to Heroku
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:login
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:push -a oc-lettings-21 web
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:release -a oc-lettings-21 web
