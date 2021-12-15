@@ -102,6 +102,7 @@ Si l'action précédente a réussi, il exécute le déploiement de l'application
 - Si toute l'installation est respectée, l'exécution du pipeline devrait se lancer à chaque mise à jour du code sur GitHub.
 - Les tests et le peluchage du code se fera à chaque mise à jour de code dans n'importe quelle branche contenant la configuration CircleCI.
 - La dockerization sur DockerHub et le déploiement sur Heroku s'exécuteront à chaque mise à jour du code dans la branche master tant qu'elle contient la configuration du pipeline.
+- Après le déploiement le site est accéssible à l'adresse: [oc-lettings-21.herokuapp.com](https://oc-lettings-21.herokuapp.com/)
 
 ## Exécution du docker en local
 
@@ -123,7 +124,7 @@ Etapes:
 - Dans un invité de commande exécuté en Administrateur.
 - Pour télécharger l'image docker `docker pull user/repo:tag`.
 - Pour exécuter l'image docker `docker run --env-file .env user/repo:tag`.
-- Pour accéder au serveur rendez-vous à l'adresse: [localhost:8000](http://localhost:8000)
+- Pour accéder au site rendez-vous à l'adresse: [localhost:8000](http://localhost:8000)
 - Il est en suite possible de manager le serveur avec l'interface Docker Desktop.
 
 ## Sentry
@@ -142,13 +143,12 @@ Etapes:
 Les variables d'environnement sont à placer à plusieurs endroits:
 - Dans un fichier nommé **.env** à la racine du projet
 - Dans la configuration de CircleCI
-- Dans la configuration Heroku
 
 | Clé  | Valeur          | Lieu |
 | :--------------: |:---------------:|:---------:|
-| DJANGO_SECRET_KEY  |   Clé secrète DJANGO  | Fichier/CircleCI/Heroku |
-| DEBUG  | 0 / 1  | Fichier/CircleCI/Heroku |
+| DJANGO_SECRET_KEY  |   Clé secrète DJANGO  | Fichier/CircleCI |
+| DEBUG  | 0 / 1  | Fichier/CircleCI |
 | DOCKER_USER  | Utilisateur DockerHub  | CircleCI |
 | DOCKER_PASS  | Mot de passe DockerHub  | CircleCI |
 | HEROKU_TOKEN  | Tocken de connexion Heroku  | CircleCI |
-| SENTRY  | Adresse Sentry  | Fichier/Heroku |
+| SENTRY  | Adresse Sentry  | Fichier/CircleCI |
