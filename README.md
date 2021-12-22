@@ -1,6 +1,15 @@
 ## Résumé
 
-Site web d'Orange County Lettings
+Site web d'Orange County Lettings.
+Orange County Lettings est une start-up dans le secteur de la location de biens immobiliers.
+
+## Accès rapide
+
+- [Développement local](#développement-local)
+- [Tests et déploiement via CircleCI](#tests-et-déploiement-via-circleci)
+- [Exécution du docker en local](#exécution-du-docker-en-local)
+- [Sentry](#sentry)
+- [Variables d'environnement](#variables-denvironnement)
 
 ## Développement local
 
@@ -82,6 +91,8 @@ Lors d'une mise à jour du code sur la branche master, CircleCI récupère le co
 Si cette action est satisfaite, il exécute une dockerisation de l'application et envoie l'image sur DockerHub.
 Si l'action précédente a réussi, il exécute le déploiement de l'application sur Heroku.
 
+Le Pipeline du projet est disponible sur CircleCI en public en [cliquant ici](https://app.circleci.com/pipelines/github/MaeRiz/OC_P13_Orange_County_Lettings).
+
 ### Prérequis
 
 - Compte [CircleCI](https://circleci.com/signup/)
@@ -91,11 +102,11 @@ Si l'action précédente a réussi, il exécute le déploiement de l'application
 
 ### Installation
 
-- Créer un projet CircleCI et le lier le à votre repository GitHub.
+- Créer un projet CircleCI et le lier à votre repository GitHub.
 - Créer un projet DockerHub.
 - Créer un projet Heroku.
-- Obtenir un token d'authentification Heroku. [Voir documentation](https://devcenter.heroku.com/articles/authentication).
-- Renseigner les variables d'environnement. Voir plus bas section **Variable d'environnement**.
+- Obtenir un token d'authentification Heroku. [Documentation](https://devcenter.heroku.com/articles/authentication).
+- Renseigner les variables d'environnement. [Variable d'environnement](#variables-denvironnement)
 
 ### Utilisation
 
@@ -118,7 +129,7 @@ En considérant:
 - user = Nom d'utilisateur du compte DockerHub.
 - repo = Application créée dans DockerHub.
 - tag = Nom donné automatiquement à une image.
-- .env = accès au fichier .env. (Voir plus bas section **Variables d'environnement**)
+- .env = chemin d'accès du fichier .env. [Variable d'environnement](#variables-denvironnement)
 
 Etapes:
 - Dans un invité de commande exécuté en Administrateur.
@@ -129,6 +140,8 @@ Etapes:
 
 ## Sentry
 
+Sentry est une application de suivi d'exceptions non gérées.
+
 ### Prérequis
 
 - Compte [Sentry](https://sentry.io/signup/)
@@ -136,13 +149,13 @@ Etapes:
 ### Utilisation
 
 - Créer un projet Sentry
-- Ajouter l'adresse obtenue aux variables d'environnement. (Voir plus bas section **Variables d'environnement**)
+- Ajouter l'adresse obtenue aux variables d'environnement. [Variable d'environnement](#variables-denvironnement)
 
-## Variables d'environnements
+## Variables d'environnement
 
-Les variables d'environnement sont à placer à plusieurs endroits:
+Les variables d'environnement sont des données sensibles à dissimuler du public, elle sont à placer à plusieurs endroits:
 - Dans un fichier nommé **.env** à la racine du projet
-- Dans la configuration de CircleCI
+- Dans la configuration du projet dans CircleCI
 
 | Clé  | Valeur          | Lieu |
 | :--------------: |:---------------:|:---------:|
